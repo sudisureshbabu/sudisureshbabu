@@ -1,0 +1,20 @@
+{
+	"name": "3_sp_gold_trip_data_green_assignment",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/ldw/Stored_Procedural_Scripts"
+		},
+		"content": {
+			"query": "use nyc_taxi_ldw\nGO\n\nSELECT *from silver.trip_type\nGO\n\nselect TOP 10 *from bronze.vw_trip_data_green_csv\nGO\n\nSELECT \n        tdg.year,\n        tdg.month,\n        tz.borough,\n        convert(DATE, lpep_pickup_datetime) as trip_date,\n        cal.day_name as trip_day,\n        tt.trip_type_desc ,\n        CASE WHEN cal.day_name in ('Saturday','Sunday') THEN 'Y' else 'N' END as trip_day_weekend_ind,\n        sum(CASE WHEN PT.description = 'Credit Card' THEN 1 else 0 end) as card_trip_count,\n        sum(CASE WHEN PT.description = 'Cash' THEN 1 else 0 end) as cash_trip_count ,\n        sum(CASE WHEN tt.trip_type_desc = 'Street-hail' THEN 1 else 0 end) as Street_Hail_Trip_count,\n        sum(CASE WHEN tt.trip_type_desc = 'Dispatch' THEN 1 else 0 end) as Dispatch_Trip_count,\n        SUM(tdg.trip_distance) as trip_distance,\n        SUM(DATEDIFF(MINUTE, tdg.lpep_pickup_datetime, tdg.lpep_dropoff_datetime)) as trip_duration_minutes,\n        SUM(tdg.fare_amount) as fare_amount\n        from SILVER.vw_trip_data_green tdg\n        JOIN SILVER.TAXI_ZONE TZ on (tdg.pu_location_id = tz.location_id)\n        JOIN silver.calendar CAL on (cal.date = convert(DATE, lpep_pickup_datetime))\n        JOIN SILVER.Payment_type pt on (tdg.payment_type = pt.payment_type)\n        JOIN silver.trip_type tt on (tdg.trip_type = tt.trip_type)\n    where tdg.YEAR = '2020'\n    and tdg.MONTH= '01'\n    group by tdg.year,\n         tdg.month,\n         tz.borough,\n         convert(DATE, lpep_pickup_datetime), \n         cal.day_name,\n         tt.trip_type_desc\nGO\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_ldw",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

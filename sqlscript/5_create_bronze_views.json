@@ -1,0 +1,20 @@
+{
+	"name": "5_create_bronze_views",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/ldw"
+		},
+		"content": {
+			"query": "use nyc_taxi_ldw\nGO\n\n-- RATE code type view \nDROP VIEW IF EXISTS BRONZE.VW_RATE_CODE\nGO\n\nCREATE VIEW BRONZE.VW_RATE_CODE\nAS\nselect \nrate_code_id, rate_code\nFrom OPENROWSET (\n    BULK 'raw/rate_code.json',\n    DATA_SOURCE = 'nyc_taxi_SRC',\n    FORMAT = 'CSV',\n    PARSER_VERSION = '1.0',\n    FIELDTERMINATOR = '0x0b',\n    ROWTERMINATOR = '0x0b',\n    FIELDQUOTE = '0x0b'\n) \nWITH(\n    jsonDoc NVARCHAR(MAX)\n) as RATE_CODE\nCROSS APPLY OPENJSON(jsonDoc)\nWITH (\n    rate_code_id TINYINT,\n    rate_code VARCHAR(20)\n)\nGO\n\nselect *from BRONZE.vw_rate_code\nGO\n\n-- Payment type view \nDROP VIEW IF EXISTS BRONZE.vw_payment_type\nGO\n\nCREATE VIEW BRONZE.vw_payment_type\nAS\nselect \npayment_type, description\nFrom OPENROWSET (\n    BULK 'raw/payment_type.json',\n    DATA_SOURCE = 'nyc_taxi_src',\n    FORMAT = 'CSV',\n    PARSER_VERSION = '1.0',\n    FIELDTERMINATOR = '0x0b',\n    ROWTERMINATOR = '0x0a',\n    FIELDQUOTE = '0x0b'\n) \nWITH(\n    jsonDoc NVARCHAR(MAX)\n) as PAYMENT_TYPE\nCROSS APPLY openjson(jsonDoc)\nWITH(\n    payment_type SMALLINT,\n    description VARCHAR(20) '$.payment_type_desc'\n)\nGO\n\nselect *from BRONZE.vw_payment_type\nGO\n\n\n-- Trip date green  view \nDROP VIEW IF EXISTS BRONZE.vw_trip_data_green_csv\nGO\n\nCREATE VIEW BRONZE.vw_trip_data_green_csv\nAS\nselect \ngtd.filepath(1) as YEAR , -- based on the numerica value it will return the position of the wildcard character\ngtd.filepath(2) as MONTH ,\ngtd.*\nFrom OPENROWSET(\n    BULK ('raw/trip_data_green_csv/year=*/month=*/*.csv'),\n    DATA_SOURCE = 'nyc_taxi_src',\n    FORMAT ='CSV',\n    PARSER_VERSION = '2.0',\n    HEADER_ROW = TRUE\n) WITH(\nVendorID\t\t\t\t int,\nlpep_pickup_datetime     datetime2(7),\nlpep_dropoff_datetime    datetime2(7),\nstore_and_fwd_flag       varchar(1),\nRatecodeID               int,\nPULocationID             int,\nDOLocationID             int,\npassenger_count          int,\ntrip_distance            float,\nfare_amount              float,\nextra                    float,\nmta_tax                  float,\ntip_amount               float,\ntolls_amount             float,\nehail_fee                int,\nimprovement_surcharge    float,\ntotal_amount             float,\npayment_type             int,\ntrip_type                int,\ncongestion_surcharge     float\n)as gtd\nGO\n\nselect TOP 100 *from BRONZE.vw_trip_data_green_csv where year = '2020' and Month = '01'\nGO\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_ldw",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

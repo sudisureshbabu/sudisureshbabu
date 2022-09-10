@@ -1,0 +1,20 @@
+{
+	"name": "12_create_silver_trip_data_green",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/ldw"
+		},
+		"content": {
+			"query": "use nyc_taxi_ldw\nGO\n\nIF OBJECT_ID ( 'silver.trip_data_green_2020_01') is NOT NULL\n   drop EXTERNAL TABLE silver.trip_data_green_2020_01\n--    -- creating external table trip_data_green\n--    CREATE EXTERNAL TABLE silver.trip_data_green \n--        WITH (\n--            LOCATION = 'silver/trip_data_green',  \n--            DATA_SOURCE = nyc_taxi_src,  \n--            FILE_FORMAT = parquet_file_format  \n--        )\n--    AS\n--    SELECT *from bronze.trip_data_green_csv\nGO\n\n\nexec silver.usp_silver_trip_data_green '2020', '01'\nGO\nexec silver.usp_silver_trip_data_green '2020', '02'\nGO\nexec silver.usp_silver_trip_data_green '2020', '03'\nGO\nexec silver.usp_silver_trip_data_green '2020', '04'\nGO\nexec silver.usp_silver_trip_data_green '2020', '05'\nGO\nexec silver.usp_silver_trip_data_green '2020', '06'\nGO\nexec silver.usp_silver_trip_data_green '2020', '07'\nGO\nexec silver.usp_silver_trip_data_green '2020', '08'\nGO\nexec silver.usp_silver_trip_data_green '2020', '09'\nGO\nexec silver.usp_silver_trip_data_green '2020', '10'\nGO\nexec silver.usp_silver_trip_data_green '2020', '11'\nGO\nexec silver.usp_silver_trip_data_green '2020', '12'\nGO\nexec silver.usp_silver_trip_data_green '2021', '01'\nGO\nexec silver.usp_silver_trip_data_green '2021', '02'\nGO\nexec silver.usp_silver_trip_data_green '2021', '03'\nGO\nexec silver.usp_silver_trip_data_green '2021', '04'\nGO\nexec silver.usp_silver_trip_data_green '2021', '05'\nGO\nexec silver.usp_silver_trip_data_green '2021', '06'\nGO\nexec silver.usp_silver_trip_data_green '2021', '07'\nGO\n\nselect TOP 10 *from bronze.vw_trip_data_green_csv\nGO\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_ldw",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

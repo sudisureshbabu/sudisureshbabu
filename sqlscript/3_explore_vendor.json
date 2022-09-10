@@ -1,0 +1,20 @@
+{
+	"name": "3_explore_vendor",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/Discovery"
+		},
+		"content": {
+			"query": "use nyc_taxi_discovery;\n\nselect \n*\nFrom OPENROWSET(\n    --BULK 'vendor.csv',\n    BULK 'vendor.csv',\n    DATA_SOURCE = 'nyc_taxi_data_raw',\n    FORMAT ='CSV',\n    PARSER_VERSION = '2.0',\n    HEADER_ROW = TRUE\n) as vendor;\n\nexec sp_describe_first_result_set N'SELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK ''vendor.csv'',\n        DATA_SOURCE = ''nyc_taxi_data_raw'',\n        FORMAT = ''CSV'',\n        PARSER_VERSION = ''2.0'',\n        HEADER_ROW = TRUE \n    ) AS [result]'\n    ;\n\n\nselect \n*\nFrom OPENROWSET(\n    --BULK 'vendor.csv',\n    BULK 'vendor_escaped.csv',\n    DATA_SOURCE = 'nyc_taxi_data_raw',\n    FORMAT ='CSV',\n    PARSER_VERSION = '2.0',\n    HEADER_ROW = TRUE,\n    ESCAPECHAR = '\\\\'\n) as vendor;\n\n\nselect \n*\nFrom OPENROWSET (\n    BULK 'trip_type.tsv',\n    DATA_SOURCE = 'nyc_taxi_data_raw',\n    FORMAT ='CSV',\n    PARSER_VERSION = '2.0',\n    HEADER_ROW = TRUE,\n     FIELDTERMINATOR ='\\t'\n) as trip_type;",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

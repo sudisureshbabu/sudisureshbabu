@@ -1,0 +1,20 @@
+{
+	"name": "2_explore_calendar",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/Discovery"
+		},
+		"content": {
+			"query": "use nyc_taxi_discovery;\n\nselect \n*\nFrom OPENROWSET(\n    BULK 'calendar.csv',\n    DATA_SOURCE = 'nyc_taxi_data_raw',\n    FORMAT ='CSV',\n    PARSER_VERSION = '2.0',\n    HEADER_ROW = TRUE\n) as cal;\n\nEXEC sp_describe_first_result_set N'select \n*\nFrom OPENROWSET(\n    BULK ''calendar.csv'',\n    DATA_SOURCE = ''nyc_taxi_data_raw'',\n    FORMAT =''CSV'',\n    PARSER_VERSION = ''2.0'',\n    HEADER_ROW = TRUE\n) as cal\n'\n\nselect \n*\nFrom OPENROWSET(\n    BULK 'calendar.csv',\n    DATA_SOURCE = 'nyc_taxi_data_raw',\n    FORMAT ='CSV',\n    PARSER_VERSION = '2.0',\n    HEADER_ROW = TRUE\n) WITH (\n    date_key INT,\n    date DATE,\n    year SMALLINT,\n    month TINYINT,\n    day TINYINT,\n    day_name VARCHAR(10),\n    day_of_year SMALLINT,\n    week_of_month TINYINT,\n    week_of_year TINYINT,\n    month_name VARCHAR(10),\n    year_month INT,\n    year_week INT\n\n)\n as cal;",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

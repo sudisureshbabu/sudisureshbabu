@@ -1,0 +1,20 @@
+{
+	"name": "10_Check_for_Duplicates",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/Discovery"
+		},
+		"content": {
+			"query": "use nyc_taxi_discovery;\n\n-- check for duplicates in tax_zone file\n\nSELECT\ntz.borough, \ncount(*) as NO_OF_RECORDS\nFROM\n    OPENROWSET(\n        BULK 'taxi_zone.csv',\n        DATA_SOURCE = 'nyc_taxi_data_raw',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        FIRSTROW = 2 ,\n        FIELDTERMINATOR = ',',\n        ROWTERMINATOR = '\\n'\n    ) WITH(\n        location_id SMALLINT 1 ,\n        borough VARCHAR(15) 2,\n        zone VARCHAR(50) 3,\n        service_zone VARCHAR(15) 4\n    )\n    AS tz\n    group by tz.borough\n    HAVING count(*) > 1\n;",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

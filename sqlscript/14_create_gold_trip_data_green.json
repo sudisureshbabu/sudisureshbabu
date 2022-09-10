@@ -1,0 +1,20 @@
+{
+	"name": "14_create_gold_trip_data_green",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/ldw"
+		},
+		"content": {
+			"query": "use nyc_taxi_ldw\nGO\n\nselect *from SILVER.TAXI_ZONE;\n\nSELECT \ntdg.year,\ntdg.month,\ntz.borough,\nconvert(DATE, lpep_pickup_datetime) as trip_date,\ncal.day_name as trip_day,\nCASE WHEN cal.day_name in ('Saturday','Sunday') THEN 'Y' else 'N' END as trip_day_weekend_ind,\nsum(CASE WHEN PT.description = 'Credit Card' THEN 1 else 0 end) as card_trip_count,\nsum(CASE WHEN PT.description = 'Cash' THEN 1 else 0 end) as cash_trip_count\nfrom SILVER.vw_trip_data_green tdg\nJOIN SILVER.TAXI_ZONE TZ on (tdg.pu_location_id = tz.location_id)\nJOIN silver.calendar CAL on (cal.date = convert(DATE, lpep_pickup_datetime))\nJOIN SILVER.Payment_type pt on (tdg.payment_type = pt.payment_type)\nwhere tdg.year = '2020'\n--and tdg.month = '01'\ngroup by tdg.year,\n         tdg.month,\n         tz.borough,\n         convert(DATE, lpep_pickup_datetime), \n         cal.day_name\nGO\n\nexec gold.usp_gold_trip_data_green '2020', '01';\nexec gold.usp_gold_trip_data_green '2020', '02';\nexec gold.usp_gold_trip_data_green '2020', '03';\nexec gold.usp_silver_trip_data_green '2020', '04';\nexec gold.usp_silver_trip_data_green '2020', '05';\nexec gold.usp_silver_trip_data_green '2020', '06';\nexec gold.usp_silver_trip_data_green '2020', '07';\nexec gold.usp_silver_trip_data_green '2020', '08';\nexec gold.usp_silver_trip_data_green '2020', '09';\nexec gold.usp_silver_trip_data_green '2020', '10';\nexec gold.usp_silver_trip_data_green '2020', '11';\nexec gold.usp_silver_trip_data_green '2020', '12';\nexec gold.usp_silver_trip_data_green '2021', '01';\nexec gold.usp_silver_trip_data_green '2021', '02';\nexec gold.usp_silver_trip_data_green '2021', '03';\nexec gold.usp_silver_trip_data_green '2021', '04';\nexec gold.usp_silver_trip_data_green '2021', '05';\nexec gold.usp_silver_trip_data_green '2021', '06';\nexec gold.usp_silver_trip_data_green '2021', '07';\n\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_ldw",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,25 @@
+{
+	"name": "tr_nyc_taxi_load",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pl_execute_all_pipelines",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 15,
+				"startTime": "2022-09-02T09:50:00",
+				"endTime": "2022-09-03T10:35:00",
+				"timeZone": "New Zealand Standard Time"
+			}
+		}
+	}
+}

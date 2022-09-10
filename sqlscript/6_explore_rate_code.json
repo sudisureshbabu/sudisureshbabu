@@ -1,0 +1,20 @@
+{
+	"name": "6_explore_rate_code",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/Discovery"
+		},
+		"content": {
+			"query": "use nyc_taxi_discovery;\n\n-- single line json array explode\nselect \n*\nFrom OPENROWSET (\n    BULK 'rate_code.json',\n    DATA_SOURCE = 'nyc_taxi_data_raw',\n    FORMAT = 'CSV',\n    PARSER_VERSION = '1.0',\n    FIELDTERMINATOR = '0x0b',\n    ROWTERMINATOR = '0x0b',\n    FIELDQUOTE = '0x0b'\n) \nWITH(\n    jsonDoc NVARCHAR(MAX)\n) as RATE_CODE\nCROSS APPLY OPENJSON(jsonDoc)\nWITH (\n    rate_code_id TINYINT,\n    rate_code VARCHAR(20)\n)\n;\n\n-- multi line json array explode\nselect \n*\nFrom OPENROWSET (\n    BULK 'rate_code_multi_line.json',\n    DATA_SOURCE = 'nyc_taxi_data_raw',\n    FORMAT = 'CSV',\n    PARSER_VERSION = '1.0',\n    FIELDTERMINATOR = '0x0b',\n    ROWTERMINATOR = '0x0b',\n    FIELDQUOTE = '0x0b'\n) \nWITH(\n    jsonDoc NVARCHAR(MAX)\n) as RATE_CODE\nCROSS APPLY OPENJSON(jsonDoc)\nWITH (\n    rate_code_id TINYINT,\n    rate_code VARCHAR(20)\n)\n;",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

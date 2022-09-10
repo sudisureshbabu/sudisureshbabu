@@ -1,0 +1,20 @@
+{
+	"name": "1_sp_silver_trip_data_green_sample",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/ldw/Stored_Procedural_Scripts"
+		},
+		"content": {
+			"query": "use nyc_taxi_ldw\nGO\n\nIF OBJECT_ID ( 'silver.trip_data_green_2020_01') is NOT NULL\n    drop EXTERNAL TABLE silver.trip_data_green_2020_01\n    -- creating external table trip_data_green_2020_01\n    CREATE EXTERNAL TABLE silver.trip_data_green_2020_01 \n        WITH (\n            LOCATION = 'silver/trip_data_green/year=2020/month=01',  \n            DATA_SOURCE = nyc_taxi_src,  \n            FILE_FORMAT = parquet_file_format  \n        )\n    AS\n    SELECT *from bronze.vw_trip_data_green_csv where YEAR ='2020' and MONTH='01'\nGO\n\nSELECT *from silver.trip_data_green_2020_01\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_ldw",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

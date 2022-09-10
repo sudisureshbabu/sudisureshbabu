@@ -1,0 +1,20 @@
+{
+	"name": "13_create_silver_views",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/ldw"
+		},
+		"content": {
+			"query": "use nyc_taxi_ldw\nGO\n\nDROP VIEW IF EXISTS SILVER.vw_trip_data_green\nGO\n\nCREATE VIEW SILVER.vw_trip_data_green\nAS\nselect\ngtd.filepath(1) as YEAR , -- based on the numerica value it will return the position of the wildcard character\ngtd.filepath(2) as MONTH ,\ngtd.*\nFrom OPENROWSET(\n        BULK 'silver/trip_data_green/year=*/month=*/*.parquet',\n        FORMAT = 'PARQUET',\n        DATA_SOURCE = 'nyc_taxi_src'\n) with (\n    vendor_id\t\t\t\t int,\n    lpep_pickup_datetime     datetime2(7),\n    lpep_dropoff_datetime    datetime2(7),\n    store_and_fwd_flag       varchar(1),\n    ratecode_id               int,\n    pu_location_id             int,\n    do_location_id             int,\n    passenger_count          int,\n    trip_distance            float,\n    fare_amount              float,\n    extra                    float,\n    mta_tax                  float,\n    tip_amount               float,\n    tolls_amount             float,\n    ehail_fee                int,\n    improvement_surcharge    float,\n    total_amount             float,\n    payment_type             int,\n    trip_type                int,\n    congestion_surcharge     float\n) as gtd\nGO\n\nselect \nTOP 100 \n* FROM SILVER.vw_trip_data_green\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_ldw",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

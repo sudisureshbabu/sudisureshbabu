@@ -1,0 +1,20 @@
+{
+	"name": "13_simple_transfermation",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/Discovery"
+		},
+		"content": {
+			"query": "use nyc_taxi_discovery;\n--Number of trips made by duration\n\nselect \nTOP 100\ngtd.lpep_pickup_datetime\n, gtd.lpep_dropoff_datetime\n, DATEDIFF(minute, gtd.lpep_pickup_datetime, gtd.lpep_dropoff_datetime ) / 60 as from_date\n, DATEDIFF(minute, gtd.lpep_pickup_datetime, gtd.lpep_dropoff_datetime ) / 60 + 1 as to_date\nFrom OPENROWSET(\n        BULK 'trip_data_green_parquet/year=2020/month=01/',\n        FORMAT = 'PARQUET',\n        DATA_SOURCE = 'nyc_taxi_data_raw'\n) as gtd\n;\n\nselect \n DATEDIFF(minute, gtd.lpep_pickup_datetime, gtd.lpep_dropoff_datetime ) / 60 as from_date\n, DATEDIFF(minute, gtd.lpep_pickup_datetime, gtd.lpep_dropoff_datetime ) / 60 + 1 as to_date\n, count(1) as no_of_trips\nFrom OPENROWSET(\n        BULK 'trip_data_green_parquet/year=2020/month=01/',\n        FORMAT = 'PARQUET',\n        DATA_SOURCE = 'nyc_taxi_data_raw'\n) as gtd\ngroup by DATEDIFF(minute, gtd.lpep_pickup_datetime, gtd.lpep_dropoff_datetime ) / 60\n        , DATEDIFF(minute, gtd.lpep_pickup_datetime, gtd.lpep_dropoff_datetime ) / 60 + 1\nORDER by from_date, to_date\n;\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

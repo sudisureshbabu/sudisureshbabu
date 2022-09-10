@@ -1,0 +1,20 @@
+{
+	"name": "15_create_gold_views",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/ldw"
+		},
+		"content": {
+			"query": "use nyc_taxi_ldw\nGO\n\nDROP VIEW IF EXISTS gold.vw_trip_data_green\nGO\n\nCREATE VIEW gold.vw_trip_data_green\nAS\nselect\ngtd.filepath(1) as YEAR , -- based on the numerica value it will return the position of the wildcard character\ngtd.filepath(2) as MONTH ,\ngtd.*\nFrom OPENROWSET(\n        BULK 'gold/trip_data_green/year=*/month=*/*.parquet',\n        FORMAT = 'PARQUET',\n        DATA_SOURCE = 'nyc_taxi_src'\n) with (\n    borough VARCHAR(15),\n    trip_date date,\n    trip_day  VARCHAR(10),\n    trip_day_weekend_ind CHAR(1),\n    card_trip_count INT,\n    cash_trip_count INT,\n    Street_Hail_Trip_count INT,\n    Dispatch_Trip_count INT,\n    trip_distance FLOAT,\n    trip_duration_minutes INT,\n    fare_amount FLOAT\n) as gtd\nGO\n\nselect \n--TOP 100 \n* FROM gold.vw_trip_data_green\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_ldw",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
