@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "sudi-synapse-course-ws"
+		},
+		"ls_serverless_sql_pool_db_nyc_taxi_ldw_connectionString": {
+			"value": ""
+		},
+		"sudi-synapse-course-ws-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"ls_sudisynapsecoursedl_properties_typeProperties_url": {
+			"value": "https://sudisynapsecoursedl.dfs.core.windows.net/"
+		},
+		"sudi-synapse-course-ws-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://sudisynapsecoursedl.dfs.core.windows.net"
+		}
+	}
+}
