@@ -16,7 +16,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "3fecbdf9-a008-4c15-a3dd-0ea3045a3557"
+				"spark.autotune.trackingId": "cdc976b4-42c0-477a-b7f5-6467a2ef07a1"
 			}
 		},
 		"metadata": {
@@ -37,6 +37,7 @@
 				"source": [
 					"# Read from Cosmos DB analytical store into a Spark DataFrame and display 10 rows from the DataFrame\n",
 					"# To select a preferred list of regions in a multi-region Cosmos DB account, add .option(\"spark.cosmos.preferredRegions\", \"<Region1>,<Region2>\")\n",
+					"##jaldljaklfjasdklfjadfjaldfjfdsf \n",
 					"\n",
 					"df = spark.read\\\n",
 					"    .format(\"cosmos.olap\")\\\n",
