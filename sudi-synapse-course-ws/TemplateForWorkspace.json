@@ -1433,7 +1433,7 @@
 					"name": "nyc_taxi/synapse_link"
 				},
 				"content": {
-					"query": "IF (NOT EXISTS(SELECT * FROM sys.credentials WHERE name = 'sudis-synapse-course-cosmos-db'))\n    CREATE CREDENTIAL [sudis-synapse-course-cosmos-db]\n    WITH IDENTITY = 'SHARED ACCESS SIGNATURE', SECRET = 'Wre4gUxlfJkkUHkP5Wlg1YT5XuNnTmpU4PGNXmnapTdje9PvxxjGF84HpW4VvXYL3x9tF9oJOL0r4hbT4kHc1Q=='\nGO\n\nSELECT TOP 100 *\nFROM OPENROWSET(​PROVIDER = 'CosmosDB',\n                CONNECTION = 'Account=sudis-synapse-course-cosmos-db;Database=nyctaxidb',\n                OBJECT = 'Heartbeat',\n                SERVER_CREDENTIAL = 'sudis-synapse-course-cosmos-db'\n) AS [Heartbeat]\n",
+					"query": "IF (NOT EXISTS(SELECT * FROM sys.credentials WHERE name = 'sudis-synapse-course-cosmos-db'))\n    CREATE CREDENTIAL [sudis-synapse-course-cosmos-db]\n    WITH IDENTITY = 'SHARED ACCESS SIGNATURE', SECRET = 'Wre4gUxlfJkkUHkP5Wlg1YT5XuNnTmpU4PGNXmnapTdje9PvxxjGF84HpW4VvXYL3x9tF9oJOL0r4hbT4kHc1Q=='\nGO\n---- select query on CosmosDB\nSELECT TOP 100 *\nFROM OPENROWSET(​PROVIDER = 'CosmosDB',\n                CONNECTION = 'Account=sudis-synapse-course-cosmos-db;Database=nyctaxidb',\n                OBJECT = 'Heartbeat',\n                SERVER_CREDENTIAL = 'sudis-synapse-course-cosmos-db'\n) AS [Heartbeat]\n",
 					"metadata": {
 						"language": "sql"
 					},
