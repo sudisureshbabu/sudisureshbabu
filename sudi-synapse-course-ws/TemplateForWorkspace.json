@@ -2258,6 +2258,63 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/2_synapse_link_query_heartbeat_using_sparkpool')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "synapse_link"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "3fecbdf9-a008-4c15-a3dd-0ea3045a3557"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "python"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"source": [
+							"# Read from Cosmos DB analytical store into a Spark DataFrame and display 10 rows from the DataFrame\n",
+							"# To select a preferred list of regions in a multi-region Cosmos DB account, add .option(\"spark.cosmos.preferredRegions\", \"<Region1>,<Region2>\")\n",
+							"\n",
+							"df = spark.read\\\n",
+							"    .format(\"cosmos.olap\")\\\n",
+							"    .option(\"spark.synapse.linkedService\", \"ls_Cosmos_db_nyc_taxi_data\")\\\n",
+							"    .option(\"spark.cosmos.container\", \"Heartbeat\")\\\n",
+							"    .load()\n",
+							"\n",
+							"display(df.limit(10))"
+						],
+						"outputs": [],
+						"execution_count": null
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/Demo')]",
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
