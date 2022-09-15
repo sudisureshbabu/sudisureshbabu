@@ -5,6 +5,9 @@
 		"workspaceName": {
 			"value": "sudi-synapse-course-ws"
 		},
+		"ls_Cosmos_db_nyc_taxi_data_connectionString": {
+			"value": ""
+		},
 		"ls_serverless_sql_pool_db_nyc_taxi_ldw_connectionString": {
 			"value": ""
 		},
